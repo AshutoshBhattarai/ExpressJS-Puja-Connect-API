@@ -44,8 +44,6 @@ router.use(
 router
   .route("/order")
   .post(async (req, res) => {
-    console.log("Order received");
-    console.log(req.body);
     const userid = req.body.user_id;
     const total = req.body.total;
     const location = req.body.location;
@@ -76,7 +74,6 @@ router
         { width: "300dp" },
         (err, code) => {
           if (err) console.log(err);
-          else console.log(code);
         }
       );
       for (let i = 0; i < order.length; i++) {
@@ -146,8 +143,6 @@ router.get("/all", async (req, res) => {
       res.render("404");
     } else {
       res.status(200).send(result.rows);
-      //console.log(result.rowCount);
-      console.log("pack received");
     }
   } catch (error) {
     console.log(error);
@@ -165,8 +160,6 @@ router.get("/:id", async (req, res) => {
       res.render("404");
     } else {
       res.status(200).send(result.rows);
-      //console.log(result.rowCount);
-      console.log("Pack received");
     }
   } catch (error) {
     console.log(error);
@@ -197,8 +190,6 @@ router.get("/detail/:id", async (req, res) => {
         image: ip + "/images/" + m.image,
       }));
       res.status(200).send(newdata);
-      //console.log(result.rowCount);
-      console.log("pack received");
     }
   } catch (error) {
     console.log(error);
@@ -209,7 +200,6 @@ router.get("/detail/:id", async (req, res) => {
 /* ------------------------------- Not in use ------------------------------- */
 router.post("/delivered", async (req, res) => {
   // try {
-  console.log(req.body);
   //   const result = await db.query(
   //     "Update orders set status='Delivered' where id=$1",
   //     [req.body.id]
@@ -227,11 +217,9 @@ router.post("/delivered", async (req, res) => {
 /* ------------- Confirm the delivery of order and change status ------------ */
 router.post("/confrimdelivery", async (req, res) => {
   try {
-    console.log(req.body);
     const otp = req.body.otp;
     const id = req.body.id;
     const code = await db.query("SELECT otp FROM orders WHERE id = $1", [id]);
-    console.log(code.rows[0].otp);
     if (otp == code.rows[0].otp) {
       const result = await db.query(
         "Update orders set status='Delivered' where id=$1",
@@ -481,15 +469,12 @@ function sendNotification(name, id) {
   fcm.send(message, function (err, response) {
     if (err) {
       console.log("Something has gone wrong!" + err);
-    } else {
-      console.log("Successfully sent with response: ", response);
     }
   });
 }
 /* ------------------------- Function to check stock ------------------------ */
 /* ---------------- Used whenever a customer places an order ---------------- */
 async function checkStock() {
-  console.log("Product Checking Started");
   const stock = await db.query(
     "SELECT prod_stock,prod_name,prod_id FROM product"
   );
@@ -502,7 +487,6 @@ async function checkStock() {
       //console.log("Notification sent");
     }
   }
-  console.log("Product Checking Completed");
 }
 
 /* ------------------ Function to get date 7 days from now ------------------ */
